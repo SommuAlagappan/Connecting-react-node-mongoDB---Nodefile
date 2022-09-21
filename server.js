@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors")
 const mongodb = require("mongodb")
 const mongoClient = mongodb.MongoClient
-const URL = "mongodb://localhost:27017";
+const URL = "mongodb+srv://sommu:admin123@cluster0.i1uzlg5.mongodb.net/?retryWrites=true&w=majority";
 const DB = "movie_names"
 
 //Midleware
