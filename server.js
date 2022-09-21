@@ -1,114 +1,126 @@
 const express = require("express");
 const app = express();
 const cors = require("cors")
+const mongodb = require("mongodb")
+const mongoClient = mongodb.MongoClient
+const URL = "mongodb://localhost:27017";
+const DB = "movie_names"
 
-
-let users = [
-  // {
-  //   id : 1,
-  //   name:"alagappan",
-  //   age:20
-  // },
-  // {
-  //   id: 2,
-  //   name:"sommu",
-  //   age:20
-  // }
-];
 //Midleware
 app.use(express.json());
 app.use(cors({
   origin : "http://localhost:3000"
 }))
 
-// Query Params
-app.get("/users", function (req, res) {
-  let qparams = req.query;
-  console.log(qparams);
+
+//Create all users
+app.post("/user", async function (req, res) {
+  try{
+  //Step1: Create a connection between Nodejs and MongoDB
+  const connection = await mongoClient.connect(URL)
   
-  let resUser = [];
-  for (
-   let index = parseInt(req.query.offset); index < parseInt(req.query.offset) + parseInt(req.query.limit); index++){
-   if(users[index]){
-     resUser.push(users[index]);
-   }
-  }
-  res.json(resUser);
-  });
+  //Step2: Select the DB
+  const db = connection.db(DB)
   
+  //Step3: Select the collection
+  //Step4: Do the operation (Create,Read,Update and Delete)    //merging both the steps 3&4
+  
+  await db.collection("users").insertOne(req.body)    //if many data - insertMany
+  
+  //Step5: Close the connection 
+  
+  await connection.close()
+  
+  res.status(200).json({message: "Data inserted successfully"})
+  
+  } catch (error) {
+    console.log(error)
+  //If any error throw error
+  res.status(500).json({message: "Something went wrong"})
+  }})
 
 
 
-app.get("/home", function (req, res) {
-  res.json([
-    {
-      name: "Sommu",
-      age: 26,
-    },
-    {
-      name: "Alagappan",
-      age: 27,
-    },
-  ]);
-});
 
-//onnu vanthu - user ah insert pandrathukaana API / Oru user ah create pandrathukaana route
-app.post("/user", function (req, res) {
-  console.log(req.body);
-  req.body.id = users.length + 1;
-  users.push(req.body);
-  res.json({ message: "Hello World" });
-});
+//Get all users
+app.get("/users",async function (req, res) {
+  try {
+    const connection = await mongoClient.connect(URL);
 
-//rendavuthu - Ulla iruka ella users yum list panni paakurathukaana API / Ella users ah list pandrathukaana route
-app.get("/users", function (req, res) {
-  res.json(users);
-});
+    const db = connection.db(DB)
+  
+    let resUser = await db.collection("users").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
+  
+    await connection.close()
 
-app.get("/user/:id", function (req, res) {
-  //console.log(req.params.id)
-  let userID = req.params.id;
-  let user = users.find((item) => item.id == userID);
-  //userID la namma url parameter 1 nu kuduthurukim so inga item.id == userID kudukurom
-  if (user) {
-    res.json(user);
-  } else {
-    res.json("User not found");
-  }
-});
+    res.json(resUser);         //final ah data veliya anupanum  
 
-app.put("/user/:id", function (req, res) {
-  let userID = req.params.id;
-  let userIndex = users.findIndex((item) => item.id == userID);
+  } catch (error) {
+    console.log(error)
+//If any error throw error
+res.status(500).json({message: "Something went wrong"})
+}})
+ 
 
-  if (userIndex != -1) {
-    Object.keys(req.body).forEach((item) => {
-      users[userIndex][item] = req.body[item];
-    });
-    res.json({
-      message: "Update Done",
-    });
-  } else {
-    res.json({
-      message: "User not found",
-    });
-  }
-});
+//Get user by id
+app.get("/user/:id",async function (req, res) {
+  try {
+    const connection = await mongoClient.connect(URL);
 
-app.delete("/user/:id", function (req, res) {
-  let userID = req.params.id;
-  let userIndex = users.findIndex((item) => item.id == userID);
+    const db = connection.db(DB)
+  
+    let resUser = await db.collection("users").findOne({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+  
+    await connection.close()
 
-  if (userIndex != -1) {
-    users.splice(userIndex, 1); //splice(At what position/index ,how many to delete, add new)
+    res.json(resUser);         //final ah data veliya anupanum  
 
-    res.json({ message: "User deleted" });
-  } else {
-    res.json({ message: "User not found" });
-  }
-});
+  } catch (error) {
+    console.log(error)
+//If any error throw error
+res.status(500).json({message: "Something went wrong"})
+}})
+ 
+
+//Update user by ID
+app.put("/user/:id",async function (req, res) {
+  try {
+    const connection = await mongoClient.connect(URL);
+
+    const db = connection.db(DB)
+  
+    let resUser = await db.collection("users").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //data va resUser gura variable ah store pannikiren 
+  
+    await connection.close()
+
+    res.json(resUser);         //final ah data veliya anupanum  
+
+  } catch (error) {
+    console.log(error)
+//If any error throw error
+res.status(500).json({message: "Something went wrong"})
+}})
+
+
+//Delete user by ID
+app.delete("/user/:id",async function (req, res) {
+  try {
+    const connection = await mongoClient.connect(URL);
+
+    const db = connection.db(DB)
+  
+    let resUser = await db.collection("users").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+  
+    await connection.close()
+
+    res.json(resUser);         //final ah data veliya anupanum  
+
+  } catch (error) {
+    console.log(error)
+//If any error throw error
+res.status(500).json({message: "Something went wrong"})
+}})
+
 
 app.listen(process.env.PORT || 3003);
-
-
 
