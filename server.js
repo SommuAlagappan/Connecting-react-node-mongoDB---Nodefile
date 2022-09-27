@@ -16,7 +16,7 @@ app.use(cors({
 //Create all users here
 app.post("/user", async function (req, res) {
   try{
-  //Step1: Create a connection between Nodejs and MongoDB
+  //Step1: Create a connection between Nodejs and MongoDB.
   const connection = await mongoClient.connect(URL)
   
   //Step2: Select the DB
