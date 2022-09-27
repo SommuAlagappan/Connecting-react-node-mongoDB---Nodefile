@@ -2,10 +2,14 @@ const express = require("express");
 const app = express();
 const cors = require("cors")
 const mongodb = require("mongodb")
+const env = require("dotenv").config()
 const mongoClient = mongodb.MongoClient
-const URL = "mongodb+srv://sommu:admin123@cluster0.i1uzlg5.mongodb.net/?retryWrites=true&w=majority";
-const DB = "movie_names"
+const URL = process.env.DB
+const DB = "connecting-react-node-mongoDB"
+let users = []
 
+
+console.log(process)
 //Midleware
 app.use(express.json());
 app.use(cors({
