@@ -8,7 +8,6 @@ const URL = process.env.DB;
 const DB = "movie_names"
 console.log(process)
 
-let users= []
 
 
 //Midleware
