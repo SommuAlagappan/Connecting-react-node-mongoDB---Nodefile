@@ -6,7 +6,7 @@ const dotenv = require("dotenv").config()
 const mongoClient = mongodb.MongoClient
 const URL = process.env.DB;
 const DB = "movie_names"
-console.log(process)
+// console.log(process)
 
 
 
