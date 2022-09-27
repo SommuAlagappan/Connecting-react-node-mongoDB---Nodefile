@@ -13,7 +13,7 @@ app.use(cors({
 }))
 
 
-//Create all users
+//Create all users here
 app.post("/user", async function (req, res) {
   try{
   //Step1: Create a connection between Nodejs and MongoDB
