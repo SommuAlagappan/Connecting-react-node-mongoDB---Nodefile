@@ -4,7 +4,7 @@ const cors = require("cors")
 const mongodb = require("mongodb")
 const env = require("dotenv").config()
 const mongoClient = mongodb.MongoClient
-const URL = "mongodb+srv://sommu:admin123@cluster0.i1uzlg5.mongodb.net/?retryWrites=true&w=majority";
+const URL = process.env.DB;
 const DB = "movie_names"
 console.log(process)
 
