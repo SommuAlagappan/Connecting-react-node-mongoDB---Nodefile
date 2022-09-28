@@ -28,7 +28,7 @@ app.post("/user", async function (req, res) {
   //Step3: Select the collection
   //Step4: Do the operation (Create,Read,Update and Delete)    //merging both the steps 3&4
   
-  await db.collection("prod").insertOne(req.body)    //if many data - insertMany
+  await db.collection("products").insertOne(req.body)    //if many data - insertMany
   
   //Step5: Close the connection 
   
@@ -49,7 +49,7 @@ app.get("/users",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("prod").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
+    let resUser = await db.collection("products").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
@@ -68,7 +68,7 @@ app.get("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("prod").findOne({_id: mongodb.ObjectId(req.params.id)});  
+    await db.collection("products").findOne({_id: mongodb.ObjectId(req.params.id)});  
   
     await connection.close()
 
@@ -84,7 +84,7 @@ app.put("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("prod").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //variable store pannamalum pannalam 
+    await db.collection("products").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //variable store pannamalum pannalam 
   
     await connection.close()
 
@@ -103,7 +103,7 @@ app.delete("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("prod").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+    await db.collection("products").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
