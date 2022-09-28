@@ -28,7 +28,7 @@ app.post("/user", async function (req, res) {
   //Step3: Select the collection
   //Step4: Do the operation (Create,Read,Update and Delete)    //merging both the steps 3&4
   
-  await db.collection("newusers").insertOne(req.body)    //if many data - insertMany
+  await db.collection("users").insertOne(req.body)    //if many data - insertMany
   
   //Step5: Close the connection 
   
@@ -49,7 +49,7 @@ app.get("/users",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("newusers").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
+    let resUser = await db.collection("users").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
@@ -68,7 +68,7 @@ app.get("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("newusers").findOne({_id: mongodb.ObjectId(req.params.id)});  
+    await db.collection("users").findOne({_id: mongodb.ObjectId(req.params.id)});  
   
     await connection.close()
 
@@ -84,7 +84,7 @@ app.put("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("newusers").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //variable store pannamalum pannalam 
+    await db.collection("users").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //variable store pannamalum pannalam 
   
     await connection.close()
 
@@ -103,7 +103,7 @@ app.delete("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    await db.collection("newusers").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+    await db.collection("users").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
@@ -116,9 +116,18 @@ res.status(500).json({message: "Something went wrong"})
 }})
 
 
-//
+//Register new user
 app.post("register", async function (req, res) {
-  
+  try {
+    const connection = await mongoClient.connect(URL)
+    const db = connection.db(DB)
+    await db.collection("newusers").insertOne(req.body)
+    await connection.close()
+    res.json("user registered successfully")
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({message:"Something went wrong"})
+  }
 })
 
 
