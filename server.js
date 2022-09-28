@@ -9,7 +9,6 @@ const DB = "movie_names"
 // console.log(process)
 
 
-
 //Midleware
 app.use(express.json());
 app.use(cors({
@@ -17,7 +16,7 @@ app.use(cors({
 }))
 
 
-//Create all users here
+//Create all users
 app.post("/user", async function (req, res) {
   try{
   //Step1: Create a connection between Nodejs and MongoDB.
@@ -29,7 +28,7 @@ app.post("/user", async function (req, res) {
   //Step3: Select the collection
   //Step4: Do the operation (Create,Read,Update and Delete)    //merging both the steps 3&4
   
-  await db.collection("users").insertOne(req.body)    //if many data - insertMany
+  await db.collection("prod").insertOne(req.body)    //if many data - insertMany
   
   //Step5: Close the connection 
   
@@ -43,9 +42,6 @@ app.post("/user", async function (req, res) {
   res.status(500).json({message: "Something went wrong"})
   }})
 
-
-
-
 //Get all users
 app.get("/users",async function (req, res) {
   try {
@@ -53,7 +49,7 @@ app.get("/users",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("users").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
+    let resUser = await db.collection("prod").find().toArray() ;  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
@@ -65,7 +61,6 @@ app.get("/users",async function (req, res) {
 res.status(500).json({message: "Something went wrong"})
 }})
  
-
 //Get user by id
 app.get("/user/:id",async function (req, res) {
   try {
@@ -73,19 +68,15 @@ app.get("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("users").findOne({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+    await db.collection("prod").findOne({_id: mongodb.ObjectId(req.params.id)});  
   
     await connection.close()
 
-    res.json(resUser);         //final ah data veliya anupanum  
-
-  } catch (error) {
-    console.log(error)
-//If any error throw error
+} catch (error) {
+console.log(error)
 res.status(500).json({message: "Something went wrong"})
 }})
  
-
 //Update user by ID
 app.put("/user/:id",async function (req, res) {
   try {
@@ -93,18 +84,17 @@ app.put("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("users").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //data va resUser gura variable ah store pannikiren 
+    await db.collection("prod").findOneAndUpdate({_id: mongodb.ObjectId(req.params.id)},{$set:req.body});  //variable store pannamalum pannalam 
   
     await connection.close()
 
-    res.json(resUser);         //final ah data veliya anupanum  
+    res.json("Data updated successfully");
 
   } catch (error) {
     console.log(error)
-//If any error throw error
+
 res.status(500).json({message: "Something went wrong"})
 }})
-
 
 //Delete user by ID
 app.delete("/user/:id",async function (req, res) {
@@ -113,17 +103,25 @@ app.delete("/user/:id",async function (req, res) {
 
     const db = connection.db(DB)
   
-    let resUser = await db.collection("users").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
+    await db.collection("prod").findOneAndDelete({_id: mongodb.ObjectId(req.params.id)});  //data va resUser gura variable ah store pannikiren 
   
     await connection.close()
 
-    res.json(resUser);         //final ah data veliya anupanum  
+    res.json("User deleted");         //final ah data veliya anupanum  
 
   } catch (error) {
     console.log(error)
 //If any error throw error
 res.status(500).json({message: "Something went wrong"})
 }})
+
+
+//
+app.post("register", async function (req, res) {
+  
+})
+
+
 
 
 app.listen(process.env.PORT || 3003);
