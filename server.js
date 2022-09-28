@@ -117,7 +117,7 @@ res.status(500).json({message: "Something went wrong"})
 
 
 //Register new user
-app.post("register", async function (req, res) {
+app.post("/register", async function (req, res) {
   try {
     const connection = await mongoClient.connect(URL)
     const db = connection.db(DB)
